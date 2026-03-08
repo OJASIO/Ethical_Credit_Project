@@ -25,25 +25,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-          # This tells GitHub where to find your lock file
-          cache-dependency-path: './package-lock.json'
 
       - name: Install dependencies
-        # If your files are in the root, keep this as ./
-        run: npm install
+        # Agar aapka package.json 'ethical credit project' folder ke andar hai
+        run: cd "ethical credit project" && npm install
 
       - name: Build
-        run: npm run build
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+        run: cd "ethical credit project" && npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # This ensures it finds the 'dist' folder created by Vite
-          path: './dist'
+          # Build folder ka sahi path
+          path: './ethical credit project/dist'
 
   deploy:
     environment:
