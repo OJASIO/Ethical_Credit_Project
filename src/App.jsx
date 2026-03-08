@@ -626,40 +626,36 @@ function InternalView({result,form}){
 // ─── DASHBOARD TAB ────────────────────────────────────────────────
 // submissions: array of { approved:bool, ageGroup:string, month:string }
 function DashboardTab({ submissions, onClear }){
-  const total    = submissions.length;
-  const approved = submissions.filter(s=>s.approved).length;
-  const rejected = submissions.filter(s=>!s.approved).length;
+  const total    = submissions.length;
+  const approved = submissions.filter(s=>s.approved).length;
+  const rejected = submissions.filter(s=>!s.approved).length;
 
-  const pieData=[{name:"Approved",value:approved||0},{name:"Rejected",value:rejected||0}];
-  const PC=[G.teal,G.red];
+  const pieData=[{name:"Approved",value:approved||0},{name:"Rejected",value:rejected||0}];
+  const PC=[G.teal,G.red];
 
-  // Build monthly chart: group submissions by month label
-// Build monthly chart: group submissions by month label
-const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const monthMap = {};
+  // FIXED: Monthly Chart Logic with Chronological Sorting
+  const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const monthMap = {};
 
-submissions.forEach(s => {
-  if (!monthMap[s.month]) monthMap[s.month] = { m: s.month, approved: 0, rejected: 0 };
-  s.approved ? monthMap[s.month].approved++ : monthMap[s.month].rejected++;
-});
+  submissions.forEach(s => {
+    if (!monthMap[s.month]) monthMap[s.month] = { m: s.month, approved: 0, rejected: 0 };
+    s.approved ? monthMap[s.month].approved++ : monthMap[s.month].rejected++;
+  });
 
-// FIXED: Convert to array and SORT based on the MONTH_LABELS index 
-// This ensures Feb comes before Mar, and Mar before Apr.
-const monthlyData = Object.values(monthMap)
-  .sort((a, b) => MONTH_LABELS.indexOf(a.m) - MONTH_LABELS.indexOf(b.m))
-  .slice(-8);
+  // Is line se Feb hamesha Mar se pehle aayega (Index-based sorting)
+  const monthlyData = Object.values(monthMap).sort((a, b) => 
+    MONTH_LABELS.indexOf(a.m) - MONTH_LABELS.indexOf(b.m)
+  );
 
-// Build age group chart from submissions
-// FIXED: Using direct Risk Engine intervals from AGE_THRESHOLDS for chart and logs
-const AGE_LABELS = ["18-30", "31-45", "46-60", "60+"];
-const ageMap = {};
-AGE_LABELS.forEach(g => ageMap[g] = { group: g, approved: 0, rejected: 0 });
+  // FIXED: Age Group Chart Logic (Direct mapping to thresholds)
+  const AGE_LABELS = ["18-30", "31-45", "46-60", "60+"];
+  const ageMap = {};
+  AGE_LABELS.forEach(g => ageMap[g] = { group: g, approved: 0, rejected: 0 });
 
-submissions.forEach(s => {
-  // Map directly to Risk Engine categories
-  const grp = s.ageGroup;
-  if (ageMap[grp]) s.approved ? ageMap[grp].approved++ : ageMap[grp].rejected++;
-});
+  submissions.forEach(s => {
+    const grp = s.ageGroup;
+    if (ageMap[grp]) s.approved ? ageMap[grp].approved++ : ageMap[grp].rejected++;
+  });
   const ageData=Object.values(ageMap);
 
   // Empty state
