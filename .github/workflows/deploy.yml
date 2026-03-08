@@ -27,17 +27,20 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        # Agar aapka package.json 'ethical credit project' folder ke andar hai
-        run: cd "ethical credit project" && npm install
+        # Seedha npm install chalao bina cd ke
+        run: npm install
 
       - name: Build
-        run: cd "ethical credit project" && npm run build
+        run: npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Build folder ka sahi path
-          path: './ethical credit project/dist'
+          # Standard Vite build folder
+          path: './dist'
 
   deploy:
     environment:
