@@ -26,8 +26,11 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+          # This tells GitHub where to find your lock file
+          cache-dependency-path: './package-lock.json'
 
       - name: Install dependencies
+        # If your files are in the root, keep this as ./
         run: npm install
 
       - name: Build
@@ -39,6 +42,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
+          # This ensures it finds the 'dist' folder created by Vite
           path: './dist'
 
   deploy:
