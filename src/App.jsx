@@ -699,7 +699,7 @@ function DashboardTab({ submissions, onClear }){
             Submissions Over Time
             <span style={{marginLeft:"auto",fontSize:9,color:G.muted,fontWeight:400,textTransform:"none",letterSpacing:0}}>grouped by month</span>
           </div>
-          {monthlyData.length<2?(
+          {monthlyData.length<1?(
             <div style={{height:200,display:"flex",alignItems:"center",justifyContent:"center",color:G.muted,fontSize:11}}>
               Submit more applications to see the trend chart populate
             </div>
